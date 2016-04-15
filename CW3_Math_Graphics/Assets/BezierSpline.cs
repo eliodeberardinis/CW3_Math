@@ -16,6 +16,9 @@ public class BezierSpline : MonoBehaviour
     [SerializeField]
     private BezierControlPointMode[] modes;
 
+    [SerializeField]
+    private bool loop;
+
     public int ControlPointCount
     {
         get
@@ -31,7 +34,21 @@ public class BezierSpline : MonoBehaviour
 
     public void SetControlPoint(int index, Vector3 point)
     {
+        if (index % 3 == 0)
+        {
+            Vector3 delta = point - points[index];
+            if (index > 0)
+            {
+                points[index - 1] += delta;
+            }
+            if (index + 1 < points.Length)
+            {
+                points[index + 1] += delta;
+            }
+        }
+
         points[index] = point;
+        EnforceMode(index);
     }
 
     public Vector3 GetPoint(float t)
@@ -93,6 +110,7 @@ public class BezierSpline : MonoBehaviour
 
         Array.Resize(ref modes, modes.Length + 1);
         modes[modes.Length - 1] = modes[modes.Length - 2];
+        EnforceMode(points.Length - 4);
     }
 
     public int CurveCount
@@ -112,8 +130,58 @@ public class BezierSpline : MonoBehaviour
     public void SetControlPointMode(int index, BezierControlPointMode mode)
     {
         modes[(index + 1) / 3] = mode;
+        EnforceMode(index);
     }
 
+    private void EnforceMode(int index)
+    {
+        int modeIndex = (index + 1) / 3;
+        BezierControlPointMode mode = modes[modeIndex];
+        if (mode == BezierControlPointMode.Free || modeIndex == 0 || modeIndex == modes.Length - 1)
+        {
+            return;
+        }
+
+        int middleIndex = modeIndex * 3;
+        int fixedIndex, enforcedIndex;
+        if (index <= middleIndex)
+        {
+            fixedIndex = middleIndex - 1;
+            enforcedIndex = middleIndex + 1;
+        }
+        else
+        {
+            fixedIndex = middleIndex + 1;
+            enforcedIndex = middleIndex - 1;
+        }
+
+        Vector3 middle = points[middleIndex];
+        Vector3 enforcedTangent = middle - points[fixedIndex];
+
+        if (mode == BezierControlPointMode.Aligned)
+        {
+            enforcedTangent = enforcedTangent.normalized * Vector3.Distance(middle, points[enforcedIndex]);
+        }
+
+        points[enforcedIndex] = middle + enforcedTangent;
+    }
+
+    public bool Loop
+    {
+        get
+        {
+            return loop;
+        }
+        set
+        {
+            loop = value;
+            if (value == true)
+            {
+                modes[modes.Length - 1] = modes[0];
+                SetControlPoint(0, points[0]);
+            }
+        }
+    }
 
     public void Reset()
     {
