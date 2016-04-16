@@ -67,6 +67,11 @@
     <Compile Include="Assets\BezierCurve.cs" />
     <Compile Include="Assets\BezierSpline.cs" />
     <Compile Include="Assets\Line.cs" />
+    <Compile Include="Assets\Pipe_Game\Pipe.cs" />
+    <Compile Include="Assets\Pipe_Game\PipeSystem.cs" />
+    <Compile Include="Assets\Pipe_Game\Player.cs" />
+    <Compile Include="Assets\SplineDecorator.cs" />
+    <Compile Include="Assets\SplineWalker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

@@ -37,16 +37,38 @@ public class BezierSpline : MonoBehaviour
         if (index % 3 == 0)
         {
             Vector3 delta = point - points[index];
-            if (index > 0)
+            if (loop)
             {
-                points[index - 1] += delta;
+                if (index == 0)
+                {
+                    points[1] += delta;
+                    points[points.Length - 2] += delta;
+                    points[points.Length - 1] = point;
+                }
+                else if (index == points.Length - 1)
+                {
+                    points[0] = point;
+                    points[1] += delta;
+                    points[index - 1] += delta;
+                }
+                else
+                {
+                    points[index - 1] += delta;
+                    points[index + 1] += delta;
+                }
             }
-            if (index + 1 < points.Length)
+            else
             {
-                points[index + 1] += delta;
+                if (index > 0)
+                {
+                    points[index - 1] += delta;
+                }
+                if (index + 1 < points.Length)
+                {
+                    points[index + 1] += delta;
+                }
             }
         }
-
         points[index] = point;
         EnforceMode(index);
     }
@@ -111,6 +133,13 @@ public class BezierSpline : MonoBehaviour
         Array.Resize(ref modes, modes.Length + 1);
         modes[modes.Length - 1] = modes[modes.Length - 2];
         EnforceMode(points.Length - 4);
+
+        if (loop)
+        {
+            points[points.Length - 1] = points[0];
+            modes[modes.Length - 1] = modes[0];
+            EnforceMode(0);
+        }
     }
 
     public int CurveCount
@@ -129,7 +158,19 @@ public class BezierSpline : MonoBehaviour
 
     public void SetControlPointMode(int index, BezierControlPointMode mode)
     {
-        modes[(index + 1) / 3] = mode;
+        int modeIndex = (index + 1) / 3;
+        modes[modeIndex] = mode;
+        if (loop)
+        {
+            if (modeIndex == 0)
+            {
+                modes[modes.Length - 1] = mode;
+            }
+            else if (modeIndex == modes.Length - 1)
+            {
+                modes[0] = mode;
+            }
+        }
         EnforceMode(index);
     }
 
@@ -137,7 +178,7 @@ public class BezierSpline : MonoBehaviour
     {
         int modeIndex = (index + 1) / 3;
         BezierControlPointMode mode = modes[modeIndex];
-        if (mode == BezierControlPointMode.Free || modeIndex == 0 || modeIndex == modes.Length - 1)
+        if (mode == BezierControlPointMode.Free || !loop && (modeIndex == 0 || modeIndex == modes.Length - 1))
         {
             return;
         }
@@ -147,22 +188,36 @@ public class BezierSpline : MonoBehaviour
         if (index <= middleIndex)
         {
             fixedIndex = middleIndex - 1;
+            if (fixedIndex < 0)
+            {
+                fixedIndex = points.Length - 2;
+            }
             enforcedIndex = middleIndex + 1;
+            if (enforcedIndex >= points.Length)
+            {
+                enforcedIndex = 1;
+            }
         }
         else
         {
             fixedIndex = middleIndex + 1;
+            if (fixedIndex >= points.Length)
+            {
+                fixedIndex = 1;
+            }
             enforcedIndex = middleIndex - 1;
+            if (enforcedIndex < 0)
+            {
+                enforcedIndex = points.Length - 2;
+            }
         }
 
         Vector3 middle = points[middleIndex];
         Vector3 enforcedTangent = middle - points[fixedIndex];
-
         if (mode == BezierControlPointMode.Aligned)
         {
             enforcedTangent = enforcedTangent.normalized * Vector3.Distance(middle, points[enforcedIndex]);
         }
-
         points[enforcedIndex] = middle + enforcedTangent;
     }
 
