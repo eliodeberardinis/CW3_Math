@@ -20,4 +20,5 @@ public class MainMenu : MonoBehaviour
         gameObject.SetActive(true);
         //Cursor.visible = false;
     }
+
 }

@@ -3,7 +3,9 @@
 public class Avatar : MonoBehaviour
 {
 
-    public ParticleSystem shape, trail, burst;
+    public ParticleSystem trail, burst;
+    public ParticleSystem shape;
+    public MeshRenderer shipRender;
 
     private Player player;
     public float deathCountdown = -1f;
@@ -21,7 +23,8 @@ public class Avatar : MonoBehaviour
             if (deathCountdown <= 0f)
             {
                 deathCountdown = -1f;
-                shape.enableEmission = true;
+                //shape.enableEmission = true;
+                shipRender.enabled = true;
                 trail.enableEmission = true;
                 player.Die();
             }
@@ -32,8 +35,9 @@ public class Avatar : MonoBehaviour
     {
         if (deathCountdown < 0f)
         {
-            shape.enableEmission = false;
+            //shape.enableEmission = false;
             trail.enableEmission = false;
+            shipRender.enabled = false;
             burst.Emit(burst.maxParticles);
             deathCountdown = burst.startLifetime;
         }
