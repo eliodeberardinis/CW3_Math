@@ -21,8 +21,6 @@ public class Pipe : MonoBehaviour
     private float relativeRotation;
     private Vector2[] uv;
 
-    public PipeItemGenerator[] generators;
-
     public float CurveRadius
     {
         get
@@ -44,14 +42,6 @@ public class Pipe : MonoBehaviour
         get
         {
             return relativeRotation;
-        }
-    }
-
-    public int CurveSegmentCount
-    {
-        get
-        {
-            return curveSegmentCount;
         }
     }
 
@@ -94,13 +84,12 @@ public class Pipe : MonoBehaviour
     {
         curveRadius = Random.Range(minCurveRadius, maxCurveRadius);
         curveSegmentCount = Random.Range(minCurveSegmentCount, maxCurveSegmentCount + 1);
-    
+
         mesh.Clear();
         SetVertices();
         SetUV();
         SetTriangles();
         mesh.RecalculateNormals();
-        generators[Random.Range(0, generators.Length)].GenerateItems(this);
     }
 
     private void SetUV()
