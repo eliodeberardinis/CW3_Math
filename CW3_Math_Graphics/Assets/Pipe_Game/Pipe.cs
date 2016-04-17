@@ -45,6 +45,14 @@ public class Pipe : MonoBehaviour
         }
     }
 
+    public int CurveSegmentCount
+    {
+        get
+        {
+            return curveSegmentCount;
+        }
+    }
+
     private Vector3 GetPointOnTorus(float u, float v)
     {
         Vector3 p;
