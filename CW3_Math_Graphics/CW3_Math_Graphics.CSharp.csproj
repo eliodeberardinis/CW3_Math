@@ -73,6 +73,7 @@
     <Compile Include="Assets\Pipe_Game\PipeSystem.cs" />
     <Compile Include="Assets\Pipe_Game\Player.cs" />
     <Compile Include="Assets\Pipe_Game\RandomPlacer.cs" />
+    <Compile Include="Assets\Pipe_Game\SpiralPlacer.cs" />
     <Compile Include="Assets\SplineDecorator.cs" />
     <Compile Include="Assets\SplineWalker.cs" />
   </ItemGroup>
