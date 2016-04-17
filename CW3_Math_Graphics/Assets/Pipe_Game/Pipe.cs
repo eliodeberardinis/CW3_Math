@@ -100,6 +100,10 @@ public class Pipe : MonoBehaviour
         SetUV();
         SetTriangles();
         mesh.RecalculateNormals();
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Destroy(transform.GetChild(i).gameObject);
+        }
         generators[Random.Range(0, generators.Length)].GenerateItems(this);
     }
 
