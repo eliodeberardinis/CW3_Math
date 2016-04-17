@@ -4,7 +4,6 @@ public class Player : MonoBehaviour
 {
 
     public PipeSystem pipeSystem;
-    public float velocity;
     private Pipe currentPipe;
 
     private float distanceTraveled;
@@ -16,16 +15,39 @@ public class Player : MonoBehaviour
     private float worldRotation, avatarRotation;
     public float rotationVelocity;
 
-    private void Start()
+    public MainMenu mainMenu;
+
+    public float startVelocity;
+    public float[] accelerations;
+    private float acceleration, velocity;
+
+    public HUD hud;
+
+    private void Awake()
     {
         world = pipeSystem.transform.parent;
         rotater = transform.GetChild(0);
+        gameObject.SetActive(false);
+    }
+
+    public void StartGame(int accelerationMode)
+    {
+        distanceTraveled = 0f;
+        avatarRotation = 0f;
+        systemRotation = 0f;
+        worldRotation = 0f;
+        acceleration = accelerations[accelerationMode];
+        velocity = startVelocity;
         currentPipe = pipeSystem.SetupFirstPipe();
         SetupCurrentPipe();
+        gameObject.SetActive(true);
+
+        hud.SetValues(distanceTraveled, velocity);
     }
 
     private void Update()
     {
+        velocity += acceleration * Time.deltaTime;
         float delta = velocity * Time.deltaTime;
         distanceTraveled += delta;
         systemRotation += delta * deltaToRotation;
@@ -40,6 +62,7 @@ public class Player : MonoBehaviour
 
         pipeSystem.transform.localRotation = Quaternion.Euler(0f, 0f, systemRotation);
         UpdateAvatarRotation();
+        hud.SetValues(distanceTraveled, velocity);
 
     }
 
@@ -75,6 +98,7 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
+        mainMenu.EndGame(distanceTraveled);
         gameObject.SetActive(false);
     }
 }

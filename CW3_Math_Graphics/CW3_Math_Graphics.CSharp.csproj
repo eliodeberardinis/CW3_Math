@@ -68,6 +68,8 @@
     <Compile Include="Assets\BezierSpline.cs" />
     <Compile Include="Assets\Line.cs" />
     <Compile Include="Assets\Pipe_Game\Avatar.cs" />
+    <Compile Include="Assets\Pipe_Game\HUD.cs" />
+    <Compile Include="Assets\Pipe_Game\MainMenu.cs" />
     <Compile Include="Assets\Pipe_Game\Pipe.cs" />
     <Compile Include="Assets\Pipe_Game\PipeItem.cs" />
     <Compile Include="Assets\Pipe_Game\PipeItemGenerator.cs" />
