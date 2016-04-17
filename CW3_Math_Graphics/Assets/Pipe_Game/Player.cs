@@ -72,4 +72,9 @@ public class Player : MonoBehaviour
         }
         world.localRotation = Quaternion.Euler(worldRotation, 0f, 0f);
     }
+
+    public void Die()
+    {
+        gameObject.SetActive(false);
+    }
 }
