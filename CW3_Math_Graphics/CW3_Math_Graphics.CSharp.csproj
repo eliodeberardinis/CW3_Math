@@ -63,31 +63,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="CW3_Math_Graphics.CSharp.Plugins.csproj">
-      <Project>{2F760057-A1D5-9C1C-04E3-8CF40F17242C}</Project>
-      <Name>CW3_Math_Graphics.CSharp.Plugins</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Assets\Bezier.cs" />
-    <Compile Include="Assets\BezierCurve.cs" />
-    <Compile Include="Assets\BezierSpline.cs" />
-    <Compile Include="Assets\Line.cs" />
-    <Compile Include="Assets\Pipe_Game\Avatar.cs" />
-    <Compile Include="Assets\Pipe_Game\HUD.cs" />
-    <Compile Include="Assets\Pipe_Game\MainMenu.cs" />
-    <Compile Include="Assets\Pipe_Game\Pipe.cs" />
-    <Compile Include="Assets\Pipe_Game\PipeItem.cs" />
-    <Compile Include="Assets\Pipe_Game\PipeItemGenerator.cs" />
-    <Compile Include="Assets\Pipe_Game\PipeSystem.cs" />
-    <Compile Include="Assets\Pipe_Game\Player.cs" />
-    <Compile Include="Assets\Pipe_Game\RandomPlacer.cs" />
-    <Compile Include="Assets\Pipe_Game\SpiralPlacer.cs" />
-    <Compile Include="Assets\SplineDecorator.cs" />
-    <Compile Include="Assets\SplineWalker.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
+    <Compile Include="Assets\Scene_1_Assets\Scene_1_Scripts\Bezier.cs" />
+    <Compile Include="Assets\Scene_1_Assets\Scene_1_Scripts\BezierCurve.cs" />
+    <Compile Include="Assets\Scene_1_Assets\Scene_1_Scripts\BezierSpline.cs" />
+    <Compile Include="Assets\Scene_1_Assets\Scene_1_Scripts\Line.cs" />
+    <Compile Include="Assets\Scene_1_Assets\Scene_1_Scripts\SplineDecorator.cs" />
+    <Compile Include="Assets\Scene_1_Assets\Scene_1_Scripts\SplineWalker.cs" />
+    <Compile Include="Assets\Scene_2_Assets\Scene_2_Scripts\Avatar.cs" />
+    <Compile Include="Assets\Scene_2_Assets\Scene_2_Scripts\HUD.cs" />
+    <Compile Include="Assets\Scene_2_Assets\Scene_2_Scripts\MainMenu.cs" />
+    <Compile Include="Assets\Scene_2_Assets\Scene_2_Scripts\Pipe.cs" />
+    <Compile Include="Assets\Scene_2_Assets\Scene_2_Scripts\PipeItem.cs" />
+    <Compile Include="Assets\Scene_2_Assets\Scene_2_Scripts\PipeItemGenerator.cs" />
+    <Compile Include="Assets\Scene_2_Assets\Scene_2_Scripts\PipeSystem.cs" />
+    <Compile Include="Assets\Scene_2_Assets\Scene_2_Scripts\Player.cs" />
+    <Compile Include="Assets\Scene_2_Assets\Scene_2_Scripts\RandomPlacer.cs" />
+    <Compile Include="Assets\Scene_2_Assets\Scene_2_Scripts\SpiralPlacer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
