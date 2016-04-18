@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scene_1_Splines.unity
+- path: Assets/Scene_2_Procedural_Biarc.unity
   isLoaded: 1
   isActive: 1
