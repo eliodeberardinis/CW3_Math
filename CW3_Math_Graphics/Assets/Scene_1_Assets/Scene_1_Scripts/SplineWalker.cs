@@ -4,11 +4,8 @@ public class SplineWalker : MonoBehaviour
 {
 
     public BezierSpline spline;
-
     public float duration;
-
     private float progress;
-
     public bool lookForward;
 
     public enum SplineWalkerMode

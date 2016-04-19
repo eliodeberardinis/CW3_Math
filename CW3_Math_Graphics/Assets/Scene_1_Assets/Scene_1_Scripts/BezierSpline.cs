@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System;
 
+//Class to create a Bezier Spline
 public class BezierSpline : MonoBehaviour
 {
+    //Enum for the control points restrinctions (to obtain continuity)
     public enum BezierControlPointMode
     {
         Free,
@@ -16,9 +18,11 @@ public class BezierSpline : MonoBehaviour
     [SerializeField]
     private BezierControlPointMode[] modes;
 
+    //Bool variable to close our spline in a loop or "Beziergon"
     [SerializeField]
     private bool loop;
 
+    //methods to obtain private values needed in other scripts (number of points and control points, number of curves in the spline)
     public int ControlPointCount
     {
         get
@@ -32,6 +36,15 @@ public class BezierSpline : MonoBehaviour
         return points[index];
     }
 
+    public int CurveCount
+    {
+        get
+        {
+            return (points.Length - 1) / 3;
+        }
+    }
+
+    //Sets the control points
     public void SetControlPoint(int index, Vector3 point)
     {
         if (index % 3 == 0)
@@ -70,9 +83,10 @@ public class BezierSpline : MonoBehaviour
             }
         }
         points[index] = point;
-        EnforceMode(index);
+        EnforceMode(index); //Enforces a user-defined control point mode (free, mirrored or aligned)
     }
 
+    //Get a point along the spline 
     public Vector3 GetPoint(float t)
     {
         int i;
@@ -93,6 +107,7 @@ public class BezierSpline : MonoBehaviour
 
     }
 
+    //enforces the velocity lines
     public Vector3 GetVelocity(float t)
     {
         int i;
@@ -114,11 +129,13 @@ public class BezierSpline : MonoBehaviour
 
     }
 
+    //normalizes the velocity lines
     public Vector3 GetDirection(float t)
     {
         return GetVelocity(t).normalized;
     }
 
+    //Adds an extra curve to the spline
     public void AddCurve()
     {
         Vector3 point = points[points.Length - 1];
@@ -130,6 +147,7 @@ public class BezierSpline : MonoBehaviour
         point.x += 1f;
         points[points.Length - 1] = point;
 
+        //resizes the array after adding the new cubic bezier
         Array.Resize(ref modes, modes.Length + 1);
         modes[modes.Length - 1] = modes[modes.Length - 2];
         EnforceMode(points.Length - 4);
@@ -142,20 +160,14 @@ public class BezierSpline : MonoBehaviour
         }
     }
 
-    public int CurveCount
-    {
-        get
-        {
-            return (points.Length - 1) / 3;
-        }
-    }
-
+ 
+    //returns the current control points mode restrinction
     public BezierControlPointMode GetControlPointMode(int index)
     {
         return modes[(index + 1) / 3];
     }
 
-
+    //Translates the user input into an index to enforce
     public void SetControlPointMode(int index, BezierControlPointMode mode)
     {
         int modeIndex = (index + 1) / 3;
@@ -174,6 +186,7 @@ public class BezierSpline : MonoBehaviour
         EnforceMode(index);
     }
 
+    //Actually enforces the desired restrictions on the control points
     private void EnforceMode(int index)
     {
         int modeIndex = (index + 1) / 3;
@@ -221,6 +234,7 @@ public class BezierSpline : MonoBehaviour
         points[enforcedIndex] = middle + enforcedTangent;
     }
 
+    //Enforces a loop. The first and last point of the spline coincide.
     public bool Loop
     {
         get
@@ -238,6 +252,7 @@ public class BezierSpline : MonoBehaviour
         }
     }
 
+    //Resets the curve to default (in a line) and the restrictions on control points to Free
     public void Reset()
     {
         points = new Vector3[] {
