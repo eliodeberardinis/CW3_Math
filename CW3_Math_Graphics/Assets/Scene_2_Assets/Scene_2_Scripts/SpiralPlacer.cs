@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 
+//Script to place obstacles inside the pipe in a spiral fashion
 public class SpiralPlacer : PipeItemGenerator
 {
 
     public PipeItem[] itemPrefabs;
 
+    //Same principal as random generator but the obstacles follow a spiral patern
     public override void GenerateItems(Pipe pipe)
     {
         float start = (Random.Range(0, pipe.pipeSegmentCount) + 0.5f);

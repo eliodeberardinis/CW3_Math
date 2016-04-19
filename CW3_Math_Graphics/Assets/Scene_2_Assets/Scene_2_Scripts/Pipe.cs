@@ -1,37 +1,44 @@
 ﻿using UnityEngine;
 
+//Script to create the basic element of our track: The pipe
 public class Pipe : MonoBehaviour
 {
-
+    //The Pipe's dimensions and segments
     public float pipeRadius;
     public int pipeSegmentCount;
 
+    //Range in which the user can adjust the pipe's curvatur and radius
     public float minCurveRadius, maxCurveRadius;
     public int minCurveSegmentCount, maxCurveSegmentCount;
 
+    //The radius and segment count of the curve
     private float curveRadius;
     private int curveSegmentCount;
 
+    //Mesh Variables: Vertices, triangles and ring distances
     private Mesh mesh;
     private Vector3[] vertices;
     private int[] triangles;
     public float ringDistance;
     private float curveAngle;
 
+    //Relative rtation across different pipe segments
     private float relativeRotation;
     private Vector2[] uv;
 
+    //An instance to generate obstacles inside the pipe
     public PipeItemGenerator[] generators;
 
+    //A series of methods to obtain private variables outside this script
     public float CurveRadius
     {
         get
         {
-            return curveRadius;
+            return curveRadius; //the radius of the current pipe's curve
         }
     }
 
-    public float CurveAngle
+    public float CurveAngle //To detect the end of the current pipe in the system
     {
         get
         {
@@ -39,7 +46,7 @@ public class Pipe : MonoBehaviour
         }
     }
 
-    public float RelativeRotation
+    public float RelativeRotation //Relative rotation compared to the previous pipe
     {
         get
         {
@@ -47,7 +54,7 @@ public class Pipe : MonoBehaviour
         }
     }
 
-    public int CurveSegmentCount
+    public int CurveSegmentCount //The length of current pipe segment
     {
         get
         {
@@ -55,6 +62,7 @@ public class Pipe : MonoBehaviour
         }
     }
 
+    //Method to obtain specific point on the pipe. Given the circular structure, Sin and Cos functions are used
     private Vector3 GetPointOnTorus(float u, float v)
     {
         Vector3 p;
@@ -65,51 +73,39 @@ public class Pipe : MonoBehaviour
         return p;
     }
 
-    //private void OnDrawGizmos()
-    //{
-    //    float uStep = (2f * Mathf.PI) / curveSegmentCount;
-    //    float vStep = (2f * Mathf.PI) / pipeSegmentCount;
-
-    //    for (int u = 0; u < curveSegmentCount; u++)
-    //    {
-    //        for (int v = 0; v < pipeSegmentCount; v++)
-    //        {
-    //            Vector3 point = GetPointOnTorus(u * uStep, v * vStep);
-    //            Gizmos.color = new Color(
-    //                1f,
-    //                (float)v / pipeSegmentCount,
-    //                (float)u / curveSegmentCount);
-    //            Gizmos.DrawSphere(point, 0.1f);
-    //        }
-    //    }
-    //}
-
+    //Initialize the Mesh
     private void Awake()
     {
         GetComponent<MeshFilter>().mesh = mesh = new Mesh();
         mesh.name = "Pipe";
     }
 
+    //Randomly generates a new pipe within the range decided by the user
     public void Generate(bool withItems = true)
     {
-        curveRadius = Random.Range(minCurveRadius, maxCurveRadius);
-        curveSegmentCount = Random.Range(minCurveSegmentCount, maxCurveSegmentCount + 1);
+        curveRadius = Random.Range(minCurveRadius, maxCurveRadius);  //The curve radius is randomly chosen between a amax and a min
+        curveSegmentCount = Random.Range(minCurveSegmentCount, maxCurveSegmentCount + 1); //The length of the segment is also randomly chosen between a max and a min
 
+        //Methods called to initialize the mesh, set the UVs, draw the triangles and calculate the normals
         mesh.Clear();
         SetVertices();
         SetUV();
         SetTriangles();
         mesh.RecalculateNormals();
+
+        //Destroys the pipe the player has passed
         for (int i = 0; i < transform.childCount; i++)
         {
             Destroy(transform.GetChild(i).gameObject);
         }
+        //Instantiate obstacles inside the pipes when the bool with item is set to true. The forst 2 pipes are without objects for simplicity
         if (withItems)
         {
             generators[Random.Range(0, generators.Length)].GenerateItems(this);
         }
     }
 
+    //The Uvs are set along the torus
     private void SetUV()
     {
         uv = new Vector2[vertices.Length];
@@ -123,19 +119,23 @@ public class Pipe : MonoBehaviour
         mesh.uv = uv;
     }
 
+    //The vertices of the meshare set here
     private void SetVertices() {
-        vertices = new Vector3[pipeSegmentCount * curveSegmentCount * 4];
-        float uStep = ringDistance / curveRadius;
-        curveAngle = uStep * curveSegmentCount * (360f / (2f * Mathf.PI));
-        CreateFirstQuadRing(uStep);
+        vertices = new Vector3[pipeSegmentCount * curveSegmentCount * 4]; //Number of vertices depend on the parameters above
+        float uStep = ringDistance / curveRadius;                         //Distance between vertices dipend on the radius and the distance between subsequent rings
+        curveAngle = uStep * curveSegmentCount * (360f / (2f * Mathf.PI)); //Normalization of the angles
+
+        CreateFirstQuadRing(uStep); //Creates the first quad: 2 triangles
+
         int iDelta = pipeSegmentCount * 4;
-        for (int u = 2, i = iDelta; u <= curveSegmentCount; u++, i += iDelta)
+        for (int u = 2, i = iDelta; u <= curveSegmentCount; u++, i += iDelta) //Generates the remaining quads for each ring in the pipe
         {
             CreateQuadRing(u * uStep, i);
         }
         mesh.vertices = vertices;
     }
 
+    //Creates the complete first quad ring
     private void CreateFirstQuadRing(float u)
     {
         float vStep = (2f * Mathf.PI) / pipeSegmentCount;
@@ -151,6 +151,7 @@ public class Pipe : MonoBehaviour
         }
     }
 
+    //Creates the subsequent quad rings
     private void CreateQuadRing(float u, int i)
     {
         float vStep = (2f * Mathf.PI) / pipeSegmentCount;
@@ -166,6 +167,7 @@ public class Pipe : MonoBehaviour
         }
     }
 
+    //Draws the triangles between the set vertices
     private void SetTriangles()
     {
         triangles = new int[pipeSegmentCount * curveSegmentCount * 6];
@@ -179,10 +181,12 @@ public class Pipe : MonoBehaviour
         mesh.triangles = triangles;
     }
 
+    //Aligns the newly created pipe with the curren one at a random angle
     public void AlignWith(Pipe pipe)
     {
         relativeRotation = Random.Range(0, curveSegmentCount) * 360f / pipeSegmentCount;
 
+        //This is achieved by temporarely switching between transforms parents and taking into account the relative rotation of the current pipe
         transform.SetParent(pipe.transform, false);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.Euler(0f, 0f, -pipe.curveAngle);

@@ -2,14 +2,16 @@
 
 public class PipeItem : MonoBehaviour
 {
-
+    //Instance of the obstacle rotater
     private Transform rotater;
 
+    //Initialize the obstacle's rotator
     private void Awake()
     {
         rotater = transform.GetChild(0);
     }
 
+    //Set the position of the obstacle on the pipe's internal surface taking into account the correct position along the curve and rotation
     public void Position(Pipe pipe, float curveRotation, float ringRotation)
     {
         transform.SetParent(pipe.transform, false);
