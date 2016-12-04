@@ -1,28 +1,31 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
+//Custom Editor for the Bezier Spline. (Code lines equal to BezierCurveInspector are not commented)
 [CustomEditor(typeof(BezierSpline))]
 public class BezierSplineInspector : Editor
 {
 
-    private const int stepsPerCurve = 10;
+    private const int stepsPerCurve = 10; //Defines steps for each curve on the spline
     private const float directionScale = 0.5f;
 
-    private BezierSpline spline;
+    private BezierSpline spline; // a reference to the spline
     private Transform handleTransform;
     private Quaternion handleRotation;
 
-    private const float handleSize = 0.04f;
+    private const float handleSize = 0.04f; //sizes for the handles displaying the control points of the splines
     private const float pickSize = 0.06f;
 
     private int selectedIndex = -1;
 
+    //colors displaying the different modes enforced for the control points
     private static Color[] modeColors = {
         Color.white,
         Color.yellow,
         Color.cyan
     };
 
+    //Draws the spline in the scene
     private void OnSceneGUI()
     {
         spline = target as BezierSpline;
@@ -48,6 +51,7 @@ public class BezierSplineInspector : Editor
         ShowDirections();
     }
 
+    //Displays the spline's information in the custom inspector
     public override void OnInspectorGUI()
     {
         
@@ -74,6 +78,7 @@ public class BezierSplineInspector : Editor
         }
     }
 
+    //Shows the parameters (location) of the selected control point in the custom inspector
     private void DrawSelectedPointInspector()
     {
         GUILayout.Label("Selected Point");
@@ -97,6 +102,7 @@ public class BezierSplineInspector : Editor
         }
     }
 
+    //Shows velocity lines
     private void ShowDirections()
     {
         Handles.color = Color.green;
@@ -111,7 +117,7 @@ public class BezierSplineInspector : Editor
     }
 
    
-
+    //Shows the selected control point in the scene when this is selected
     private Vector3 ShowPoint(int index)
     {
         Vector3 point = handleTransform.TransformPoint(spline.GetControlPoint(index));
